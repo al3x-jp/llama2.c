@@ -1,0 +1,16 @@
+## Set up SYCL environment
+export DPCPP_HOME=~/sycl_workspace
+export PATH=$DPCPP_HOME/llvm/build/bin:$PATH
+export LD_LIBRARY_PATH=$DPCPP_HOME/llvm/build/lib:$LD_LIBRARY_PATH
+## Create build directory
+mkdir build && cd build
+## Run CMAKE
+## - You need to provide the SYCL compiler location using DPCPP_HOME
+## - You can enable CUDA_BACKEND if you want to use CUDA SYCL CUDA_BACKEND
+## - If using CUDA_BACKEND you will need to supply a CUDA toolkit location with CUDA_TOOLKIT
+cmake   -DDPCPP_HOME=<SYCL-COMPILER-LOCATION> 
+        -DCUDA_BACKEND=True 
+        -DCUDA_TOOLKIT=<CUDA-TOOLKIT_LOCATION> 
+        ..
+## Build the program
+make

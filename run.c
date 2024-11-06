@@ -214,19 +214,24 @@ void softmax(float* x, int size) {
     }
 }
 
-void matmul(float* xout, float* x, float* w, int n, int d) {
-    // W (d,n) @ x (n,) -> xout (d,)
-    // by far the most amount of time is spent inside this little function
-    int i;
-    #pragma omp parallel for private(i)
-    for (i = 0; i < d; i++) {
-        float val = 0.0f;
-        for (int j = 0; j < n; j++) {
-            val += w[i * n + j] * x[j];
+#ifdef USE_SYCL
+    void sycl_matmul(float* xout, float* x, float* w, int n, int d);
+    #define matmul(xout, x, w, n, d) sycl_matmul(xout, x, w, n, d)
+#else
+    void matmul(float* xout, float* x, float* w, int n, int d) {
+        // W (d,n) @ x (n,) -> xout (d,)
+        // by far the most amount of time is spent inside this little function
+        int i;
+        #pragma omp parallel for private(i)
+        for (i = 0; i < d; i++) {
+            float val = 0.0f;
+            for (int j = 0; j < n; j++) {
+                val += w[i * n + j] * x[j];
+            }
+            xout[i] = val;
         }
-        xout[i] = val;
     }
-}
+#endif
 
 float* forward(Transformer* transformer, int token, int pos) {
 

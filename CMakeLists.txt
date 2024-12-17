@@ -7,11 +7,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
 if(CUDA_BACKEND)
 	# Build for CUDA BACK-END (requires an NVIDIA CARD)
 	message(STATUS "Building for CUDA back-end.")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3 -Wno-writable-strings -fsycl -fsycl-targets=nvptx64-nvidia-cuda --cuda-path=${CUDA_TOOLKIT}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3 -fsycl-range-rounding=disable -Wno-writable-strings -fsycl -fsycl-targets=nvptx64-nvidia-cuda --cuda-path=${CUDA_TOOLKIT}")
 else()
 	# Build Native Platform
     message(STATUS "Building for native OpencCL back-end.")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3 -fsycl -fno-sycl-instrument-device-code")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3 -fsycl -fsycl-range-rounding=disable -fno-sycl-instrument-device-code")
 endif()
 
 project(run)
